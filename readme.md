@@ -17,12 +17,20 @@ The provided template contains all the files, images, and text content needed to
 
 Ignore that mumbo jumbo and just dive in! The only files you'll need to worry about are: `index.html`, `img` folder, `css` folder.
 
-## Requirements
+## Goals
 
 * Use HTML5 Canvas to make an "ogre" (this can just be a box) and a "hero" (this can also just be a box)
 * Be able to move the Hero using key bindings (either WASD or the arrow keys)
 * Detect a collision between the hero and the ogre
 * Use a single external CSS stylesheet to style your game in the browser
+
+## Step One: Make The Game-board
+
+We've given you a bunch of containers and some styling. Dig into your developer's tools and the css to figure out what's going on!
+
+## Step Two: Add Some logic!
+
+Set up your game by assigning your canvas DOM element to a variable (game is a good one). We're also going to display the current x, y position of our player in the `<aside>` named "movement". The last thing to do for setup is to 
 
 ## Additional Resources
 
