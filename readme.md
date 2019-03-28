@@ -1,4 +1,4 @@
-# CSS Positioning: Instagram
+# Canvas Crawler
 
 Let's learn a bit about HTML5's canvas by making a super basic dungeon crawler!
 
