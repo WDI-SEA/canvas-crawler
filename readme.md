@@ -24,6 +24,22 @@ Ignore that mumbo jumbo and just dive in! The only files you'll need to worry ab
 * Detect a collision between the hero and the ogre
 * Use a single external CSS stylesheet to style your game in the browser
 
+## Instructions
+
+### Look at what you have
+
+Take a look at the code that exists in this repository. What is the css doing? How is it doing it? How would you change the coloring?
+Look at the images in the `/img` folder. How could you use those to spruce up your game?
+Check that everything is linked up in the `index.html`. Is there anything else in there that is non-standard?
+
+### Get Started
+
+Look at the `index.html` again. What elements will we need to access?
+> HINT: Why do we use `id` in HTML over `class`?
+
+In your `js/main.js` put a `console.log` and run your index.html in your browser to check that everything is linked up correctly. Once you've tested that, make a reference to a couple of things in the HTML that we'll need to access consistently.
+* `<h2 id="movement">`: This will display the x and y coordinates of our hero so we can see what's going on.
+* `<canvas id="game">`: This is the main piece of our game; it's where we will be rendering our game an what we will be updating.
 
 ## Additional Resources
 
