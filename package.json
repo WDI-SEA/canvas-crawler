@@ -4,7 +4,7 @@
   "description": "Let's learn a bit about HTML5's canvas by making a super basic dungeon crawler!",
   "main": "./js/main.js",
   "dependencies": {
-    "browser-sync": "^2.26.3"
+    "browser-sync": "^2.26.7"
   },
   "devDependencies": {},
   "scripts": {
