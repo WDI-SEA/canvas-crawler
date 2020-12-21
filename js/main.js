@@ -12,16 +12,6 @@ game.setAttribute('height', getComputedStyle(game)['height'])
 // Get some Context
 let ctx = game.getContext('2d')
 
-// draw a filled box
-let drawBox = (x, y, size, color) => {
-  ctx.fillStyle = color
-  ctx.fillRect(x, y, size, size)
-}
-
-game.addEventListener('click', e => {
-  drawBox(e.offsetX, e.offsetY, 50, 'rebeccapurple')
-})
-
 // Constructor function (JS version of OOP)
 // This is a blueprint for a Crawler
 function Crawler(x, y, color, width, height) {
@@ -40,3 +30,12 @@ function Crawler(x, y, color, width, height) {
 // individual crawler
 let hero = new Crawler(20, 20, 'hotpink', 20, 20)
 let ogre = new Crawler(10, 10, '#bada55', 40, 80)
+
+// move the hero
+game.addEventListener('click', e => {
+  // want to draw the hero at offsetX and offsetY
+  ctx.clearRect(0, 0, game.width, game.height)
+  hero.x = e.offsetX
+  hero.y = e.offsetY
+  hero.render()
+})
