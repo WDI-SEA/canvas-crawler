@@ -3,8 +3,11 @@
 let movementDisplay = document.getElementById('movement')
 let game = document.getElementById('game')
 
-game.setAttribute('width', '800px')
-game.height = 400;
+game.setAttribute('width', getComputedStyle(game)['width'])
+game.setAttribute('height', getComputedStyle(game)['height'])
+
+// game.width = getComputedStyle(game)['width']
+// game.height = getComputedStyle(game)['height']
 
 // Get some Context
 let ctx = game.getContext('2d')
@@ -15,32 +18,25 @@ let drawBox = (x, y, size, color) => {
   ctx.fillRect(x, y, size, size)
 }
 
-// create some characters
-let ogre = {
-  x: 10,
-  y: 10,
-  color: '#bada55',
-  width: 40,
-  height: 80,
-  alive: true,
-  render: function() {
+game.addEventListener('click', e => {
+  drawBox(e.offsetX, e.offsetY, 50, 'rebeccapurple')
+})
+
+// Constructor function (JS version of OOP)
+// This is a blueprint for a Crawler
+function Crawler(x, y, color, width, height) {
+  this.x = x
+  this.y = y
+  this.color = color
+  this.width = width
+  this.height = height
+  this.alive = true
+  this.render = function() {
     ctx.fillStyle = this.color
-    ctx.fillRect(this.x, this.y, this.width, this.height )
+    ctx.fillRect(this.x, this.y, this.width, this.height)
   }
 }
 
-let hero = {
-  x: 50,
-  y: 50,
-  color: 'hotpink',
-  width: 60,
-  height: 60,
-  alive: true,
-  render: function() {
-    ctx.fillStyle = this.color
-    ctx.fillRect(this.x, this.y, this.width, this.height )
-  }
-}
-
-ogre.x = 100
-ogre.render()
+// individual crawler
+let hero = new Crawler(20, 20, 'hotpink', 20, 20)
+let ogre = new Crawler(10, 10, '#bada55', 40, 80)
