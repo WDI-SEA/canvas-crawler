@@ -6,9 +6,6 @@ let game = document.getElementById('game')
 game.setAttribute('width', getComputedStyle(game)['width'])
 game.setAttribute('height', getComputedStyle(game)['height'])
 
-// game.width = getComputedStyle(game)['width']
-// game.height = getComputedStyle(game)['height']
-
 // Get some Context
 let ctx = game.getContext('2d')
 
@@ -41,10 +38,26 @@ let gameLoop = () => {
     // render Ogre
     ogre.render()
     // check for collision
-    // TODO: Write detectHit()
+    detectHit()
   }
   // render hero
   hero.render()
+}
+
+let detectHit = () => {
+  // write the if statement to end all if statements
+  // if hero's right > ogre's left AND hero's left < ogre's right
+  // if hero's bottom > ogre's top && hero top < ogre bottom
+  if (
+    hero.x + hero.width > ogre.x &&
+    hero.x < ogre.x + ogre.width &&
+    hero.y < ogre.y + ogre.height &&
+    hero.y + hero.height > ogre.y
+    ) {
+      // game over
+      ogre.alive = false;
+      document.querySelector('#btm-right > h2').innerText = 'You Killed Shrek'
+    } 
 }
 
 let movementHandler = e => {
@@ -67,7 +80,8 @@ let movementHandler = e => {
   }
 }
 
+let stop = () => clearInterval(gameInterval)
+
+
 document.addEventListener('keypress', movementHandler)
-
-let gameInterval = setInterval(gameLoop, 30);
-
+let gameInterval = setInterval(gameLoop, 70);
