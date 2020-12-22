@@ -9,12 +9,26 @@ let ctx = game.getContext('2d')
 game.setAttribute('height', getComputedStyle(game)['height'])
 game.setAttribute('width', getComputedStyle(game)['width'])
 
-// Draw a filled box
-let drawBox = (x, y, size, color) => {
-  ctx.fillStyle = color
-  ctx.fillRect(x, y, size, size)
+// Ogre
+let ogre = {
+  x: 400,
+  y: 150,
+  color: '#bada55', 
+  width: 60,
+  height: 120,
+  alive: true,
+  render: function() {
+    ctx.fillStyle = this.color
+    ctx.fillRect(this.x, this.y, this.width, this.height)
+  }
 }
 
 game.addEventListener('click', (e) => {
-  drawBox(e.offsetX, e.offsetY, 100, 'hotpink')
-})
+  // clear whole board
+  ctx.clearRect(0, 0, game.width, game.height)
+  // change ogre position
+  ogre.x = e.offsetX
+  ogre.y = e.offsetY
+  // draw ya boi
+  ogre.render()
+}, { option: true })
