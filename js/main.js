@@ -29,13 +29,45 @@ function Crawler(x, y, color, width, height) {
 
 // individual crawler
 let hero = new Crawler(20, 20, 'hotpink', 20, 20)
-let ogre = new Crawler(10, 10, '#bada55', 40, 80)
+let ogre = new Crawler(400, 150, '#bada55', 60, 120)
 
-// move the hero
-game.addEventListener('click', e => {
-  // want to draw the hero at offsetX and offsetY
+let gameLoop = () => {
+  // clear the canvas
   ctx.clearRect(0, 0, game.width, game.height)
-  hero.x = e.offsetX
-  hero.y = e.offsetY
+  // Display relevant Game State Info (display the x, y coordinates of our hero)
+  movementDisplay.innerText = `X: ${hero.x}\nY: ${hero.y}`
+  // check if the ogre is alive
+  if (ogre.alive) {
+    // render Ogre
+    ogre.render()
+    // check for collision
+    // TODO: Write detectHit()
+  }
+  // render hero
   hero.render()
-})
+}
+
+let movementHandler = e => {
+  switch(e.key) {
+    case 'w':
+      // move up
+      hero.y -= 10
+      break
+    case 'a':
+      // move left
+      hero.x -= 10
+      break
+    case 's':
+      // move down
+      hero.y += 10
+      break
+    case 'd':
+      // move right
+      hero.x += 10
+  }
+}
+
+document.addEventListener('keypress', movementHandler)
+
+let gameInterval = setInterval(gameLoop, 30);
+
