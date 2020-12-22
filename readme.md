@@ -123,26 +123,26 @@ It's time to make our game! So our goal is to have an Ogre (which will be statio
 We want to have an Ogre object and a Hero object. They should look like this:
 ```javascript
 var ogre = {
-  x = 10,
-  y = 10,
-  color = "#BADA55",
-  width = 40,
-  height = 80,
-  alive = true
-  render = function () {
+  x: 200,
+  y: 100,
+  color: "#bada55",
+  width: 60,
+  height: 120,
+  alive: true
+  render: function () {
     ctx.fillStyle = this.color
     ctx.fillRect(this.x, this.y, this.width, this.height)
   }
 }
 
 var hero = {
-  x = 0,
-  y = 0,
-  color = "hotpink",
-  width = 20,
-  height = 20,
-  alive = true
-  render = function () {
+  x: 0,
+  y: 0,
+  color: "hotpink",
+  width: 20,
+  height: 20,
+  alive: true
+  render: function () {
     ctx.fillStyle = this.color
     ctx.fillRect(this.x, this.y, this.width, this.height)
   }
