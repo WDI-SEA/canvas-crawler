@@ -44,24 +44,25 @@ let gameLoop = () => {
 }
 
 let detectHit = () => {
-  // TODO: write collision detection
-  console.log('detectin hit')
+  if (
+    hero.x + hero.width >= ogre.x &&
+    hero.x <= ogre.x + ogre.width &&
+    hero.y <= ogre.y + ogre.height &&
+    hero.y + hero.height >= ogre.y
+    ) {
+      endGame()
+    }
+  }
+  
+let endGame = () => {
+  ogre.alive = false
+  statusDisplay.innerText = 'You murdered Shrek!'
+  setTimeout(() => {
+    clearInterval(gameInterval)
+  }, 200)
 }
 
-let movementHandler = (e) => {
-  // move my hero based on the key pressed.
-  // if (e.key === 'w') { // move up
-  //   hero.y -= movement
-  // } else if (e.key === 'a') { // move left
-  //   hero.x -= movement
-  // } else if (e.key === 's') { // move down
-  //   hero.y += movement
-  // } else if (e.key === 'd') { // move right
-  //   hero.x += movement
-  // } else {
-  //   console.log(`${e.key} won't make you move`)
-  // }
-  
+let movementHandler = (e) => {  
   switch(e.key) {
     case 'w':
       hero.y -= movement// move up
