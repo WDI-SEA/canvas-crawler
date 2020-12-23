@@ -25,13 +25,66 @@ function Crawler(x, y, width, height, color) {
 let hero = new Crawler(50, 200, 50, 50, 'hotpink')
 let ogre = new Crawler(400, 150, 60, 100, '#bada55')
 
-game.addEventListener('click', (e) => {
-  // clear whole board
+let movement = 10
+
+let gameLoop = () => {
+  // clear canvas
   ctx.clearRect(0, 0, game.width, game.height)
+  // display gamestate on the DOM
+  movementDisplay.innerText = `X: ${hero.x}\nY: ${hero.y}`
+  // if ogre is alive
+  if (ogre.alive) {
+    // render the ogre
+    ogre.render()
+    // detect collision
+    detectHit()
+  }
+  // render the hero
   hero.render()
-  // change ogre position
-  ogre.x = e.offsetX
-  ogre.y = e.offsetY
-  // draw ya boi
-  ogre.render()
-}, { option: true })
+}
+
+let detectHit = () => {
+  // TODO: write collision detection
+  console.log('detectin hit')
+}
+
+let movementHandler = (e) => {
+  // move my hero based on the key pressed.
+  // if (e.key === 'w') { // move up
+  //   hero.y -= movement
+  // } else if (e.key === 'a') { // move left
+  //   hero.x -= movement
+  // } else if (e.key === 's') { // move down
+  //   hero.y += movement
+  // } else if (e.key === 'd') { // move right
+  //   hero.x += movement
+  // } else {
+  //   console.log(`${e.key} won't make you move`)
+  // }
+  
+  switch(e.key) {
+    case 'w':
+      hero.y -= movement// move up
+      break
+    case 'a':
+      hero.x -= movement // move left
+      break
+    case 's':
+      hero.y += movement // move down
+      break
+    case 'd':
+      hero.x += movement// move right
+  }
+}
+
+// set event listener for keydown
+document.addEventListener('keydown', movementHandler)
+
+// initializes the game
+let gameInterval = setInterval(gameLoop, 100)
+
+
+// Helper function so my computer doesn't explode
+document.querySelector('#btm-left').addEventListener('click', () => {
+  clearInterval(gameInterval)
+})
