@@ -142,6 +142,9 @@ var hero = {
 That can get a bit mouthy so we're going to create a `Crawler` class which will have everything we need to render our Ogre and Hero.
 We use this class by calling it using javascript's `new`. If we wanted to make more than one enemy, having this `Crawler` will make our code MUCH cleaner.
 
+<details><summary>Stuck?</summary>
+<p>
+
 ```javascript
 class Crawler{
   constructor(x, y, color, width, height) {
@@ -158,6 +161,9 @@ class Crawler{
   }
 }
 ```
+
+</p>
+</details>
 
 To create a new `Crawler`, simply type something like:
 ```javascript
@@ -365,7 +371,27 @@ When talking collision, we want to test against the larger box. We have 4 points
 <summary>Check your work</summary>
 
 ```javascript
-// add collision detection
+function detectHit() {
+  // check each side
+  let ogreLeft = hero.x + hero.width >= ogre.x
+  let ogreRight = hero.x <= ogre.x + ogre.width
+  let ogreTop = hero.y + hero.height >= ogre.y
+  let ogreBottom = hero.y <= ogre.y + ogre.height
+  console.log('ogreRight', ogreRight)
+  console.log('ogreLeft', ogreLeft)
+  console.log('ogreTop', ogreTop)
+  console.log('ogreBottom', ogreBottom)
+  // all in one big conditional check
+  if (
+    hero.x + hero.width >= ogre.x &&
+    hero.x <= ogre.x + ogre.width &&
+    hero.y <= ogre.y + ogre.height &&
+    hero.y + hero.height >= ogre.y
+    ) {
+      // do some game stuff!
+      console.log('hit!')
+    }
+}
 ```
 </details>
 
@@ -376,8 +402,10 @@ When talking collision, we want to test against the larger box. We have 4 points
 * **Make the ogre and hero spawn in random locations to start.** How do you make sure that they don't accidentally spawn on top of each other? That they don't spawn off the board or, more likely, half off the board?
 * **Make it pretty!** There are some art assets in the `img` folder, put them to use or get some free sprites and make your hero and ogre look like more than boxes.
 * **Make a reset button that restarts the game.** Replayability is the name of the game, keep 'em coming back for more!
+* **Move diagonally** Right now we are using a 'keydown' event listener to move the hero. Using a 'keyup' event listener, can you think of a way to store keypresses in state to be reference in the game loop?
+* **Refactor hit detection** Hardcoding hitdection to only work between two specific objects limits gameplay quite a bit. How can you refactor this to be more flexible? 
 * **Refactor the Crawler class to accept an object as parameters.** Constructors with a ton of parameters can get really confusing really fast, so organizing them into an object improves readability and cuts down on bugs.
-<details>
+ <details>
 <summary>Check your work</summary>
 
 ```javascript
@@ -407,7 +435,6 @@ const randoArgs = {
 let rando = new Crawler(randoArgs)
 ```
 </details>
-
 
 ## Additional Resources
 
