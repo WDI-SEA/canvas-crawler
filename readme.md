@@ -372,16 +372,26 @@ When talking collision, we want to test against the larger box. We have 4 points
 
 ```javascript
 function detectHit() {
-  // check each side
+  // check each side for intersection one by one
   let ogreLeft = hero.x + hero.width >= ogre.x
-  let ogreRight = hero.x <= ogre.x + ogre.width
-  let ogreTop = hero.y + hero.height >= ogre.y
-  let ogreBottom = hero.y <= ogre.y + ogre.height
   console.log('ogreRight', ogreRight)
+  let ogreRight = hero.x <= ogre.x + ogre.width
   console.log('ogreLeft', ogreLeft)
+
+  /* 
+  checking both sides with an or will always be true!
+  (hero.x <= ogre.x + ogre.width || hero.x + hero.width >= ogre.x)
+  hits are only detected only when BOTH are ture!
+  (hero.x <= ogre.x + ogre.width && hero.x + hero.width >= ogre.x)
+  */
+
+  // check the top annd bottom 
+  let ogreTop = hero.y + hero.height >= ogre.y
   console.log('ogreTop', ogreTop)
+  let ogreBottom = hero.y <= ogre.y + ogre.height
   console.log('ogreBottom', ogreBottom)
-  // all in one big conditional check
+
+  // one big, confusing if:
   if (
     hero.x + hero.width >= ogre.x &&
     hero.x <= ogre.x + ogre.width &&
