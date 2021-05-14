@@ -6,16 +6,7 @@ There's a bit of starter code, so you can jump right into it.
 
 ## Getting Started
 
-The provided template contains all the files, images, and text content needed to create the page.
-
-***IF YOU HAVE NODE INSTALLED ALREADY and would like to use browsersync***
-
-* Run `npm install` to install dependencies
-* Run `npm start` to start the BrowserSync server
-
-***OTHERWISE***
-
-Ignore that mumbo jumbo and just dive in! The only files you'll need to worry about are: `index.html`, `img` folder, `css` folder.
+The provided template contains all the files, images, and text content needed to create the page. Take a moment to explore everything that is here.
 
 ## Goals
 
@@ -23,7 +14,6 @@ Ignore that mumbo jumbo and just dive in! The only files you'll need to worry ab
 * Be able to move the Hero using key bindings (either WASD or the arrow keys) and display current coordinates
 * Detect a collision between the hero and the ogre
 * When the hero collides with the ogre, remove the ogre from the screen
-* Use a single external CSS stylesheet to style your game in the browser
 
 ## Instructions
 
@@ -41,16 +31,16 @@ Look at the `index.html` again. What elements will we need to access?
 In your `js/main.js` put a `console.log` and run your index.html in your browser to check that everything is linked up correctly. Once you've tested that, make a reference to a couple of things in the HTML that we'll need to access consistently.
 * `<h2 id="movement">`: This will display the x and y coordinates of our hero so we can see what's going on.
 ```javascript
-let movementDisplay = document.getElementById('movement')
+const movementDisplay = document.getElementById('movement')
 ```
-* `<canvas id="game">`: This is the main piece of our game; it's where we will be rendering our game an what we will be updating.
+* `<canvas id="canvas">`: This is the main piece of our game; it's where we will be rendering our game an what we will be updating.
 ```javascript
-let game = document.getElementById('game')
+const canvas = document.getElementById('canvas')
 ```
 
 ### To give you some context...
 
-In order to make the canvas do things, you have to give **context**. We do this by assigning getting the context from the canvas element and assigning it to a variable. The syntax is `canvasElement.getContext('2d')`. There is no 3d context yet, but what the 2d context does is return a bunch of neat functionality that we can do to our canvas.
+In order to make the canvas do things, you have to give **context**. We do this by assigning getting the context from the canvas element and assigning it to a variable. The syntax is `canvasElement.getContext('2d')`. What the 2d context does is return a bunch of neat functionality that we can do to our canvas.
 > "`getContext('2d') returns an object that provides methods and properties for drawing and manipulating images and graphics on a canvas element in a document. A context object includes information about colors, line widths, fonts, and other graphic parameters that can be drawn on a canvas."
 
 ## Let's start drawing!
@@ -58,7 +48,7 @@ In order to make the canvas do things, you have to give **context**. We do this 
 In order to test if our canvas is working, let's draw a rectangle. 
 ```javascript
 // Set your Context!
-var ctx = game.getContext('2d')
+const ctx = canvas.getContext('2d')
 
 // Fill Color
 ctx.fillStyle = 'white';
@@ -80,8 +70,8 @@ You'll notice the CSS dimensions for the game container are not in `px`, but our
 <p>
 
 ```javascript
-game.setAttribute("height", getComputedStyle(game)["height"])
-game.setAttribute("width", getComputedStyle(game)["width"])
+canvas.setAttribute("height", getComputedStyle(canvas)["height"])
+canvas.setAttribute("width", getComputedStyle(canvas)["width"])
 ```
 
 </p>
@@ -108,7 +98,7 @@ Add an event listener to the game that, on click, draws a green box at the offse
 <p>
 
 ```javascript
-game.addEventListener("click", function(e) {
+canvas.addEventListener("click", function(e) {
   drawBox(e.offsetX, e.offsetY, 50, 'green');
 });
 ```
@@ -149,27 +139,35 @@ var hero = {
 }
 ```
 
-That can get a bit mouthy so we're going to create a `Crawler` object constructor which will have everything we need to render our Ogre and Hero. Read more about constructor funtions [at MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/constructor). 
-We use this function by calling it using javascript's `new`. If we wanted to make more than one enemy, having this `Crawler` will make our code MUCH cleaner.
+That can get a bit mouthy so we're going to create a `Crawler` class which will have everything we need to render our Ogre and Hero.
+We use this class by calling it using javascript's `new`. If we wanted to make more than one enemy, having this `Crawler` will make our code MUCH cleaner.
+
+<details><summary>Stuck?</summary>
+<p>
 
 ```javascript
-function Crawler(x, y, color, width, height) {
-  this.x = x
-  this.y = y
-  this.color = color
-  this.width = width
-  this.height = height
-  this.alive = true
-  this.render = function () {
+class Crawler{
+  constructor(x, y, color, width, height) {
+    this.x = x
+    this.y = y
+    this.color = color
+    this.width = width
+    this.height = height
+    this.alive = true
+  }
+  render() {
     ctx.fillStyle = this.color
     ctx.fillRect(this.x, this.y, this.width, this.height)
   }
 }
 ```
 
+</p>
+</details>
+
 To create a new `Crawler`, simply type something like:
 ```javascript
-var rando = new Crawler(5, 5, '#blue', 40, 140)
+let rando = new Crawler(5, 5, 'purple', 40, 140)
 ```
 
 Now that you know what we're doing to DRY up our code, create your `Crawler` constructor object and make two new crawlers called `hero` and `ogre`. They should have the same parameters as the `hero` and `ogre` objects above. Make sure to delete the old `hero` and `ogre` objects so you aren't doubling up.
@@ -184,8 +182,8 @@ As you can see, every time we click, a hero is drawn on the canvas, but the othe
 <p>
 
 ```javascript
-game.addEventListener("click", function(e) {
-  ctx.clearRect(0, 0, game.width, game.height)
+canvas.addEventListener("click", function(e) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
   hero.x = e.offsetX
   hero.y = e.offsetY
   hero.render()
@@ -201,24 +199,19 @@ Click events are nice, but it's not how we want to move our hero by keypress. We
 
 Before we start writing, we need to clean some things up. 
 * Delete your event listener that drew the hero on click.
-* Write an event listener for `DOMContentLoaded` 
-* Declare `hero` and `ogre` with no value at the top of your page, by your context declartion. Then, within `DOMContentLoaded`, assign `hero` and `ogre` to be new crawlers
+* Declare `hero` and `ogre` and assign them to be new crawlers
 
 <details><summary>Confused?</summary>
 
 ```javascript
-var ctx = game.getContext('2d')
-var hero;
-var ogre;
+const ctx = canvas.getContext('2d')
 
-function Crawler(x, y, color, height, width) {
+class Crawler{
   ...
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  hero = new Crawler(100, 200, 'hotpink', 40, 40);
-  ogre = new Crawler(500, 150, '#BADA55', 100, 150);
-})
+let hero = new Crawler(100, 200, 'hotpink', 40, 40);
+let ogre = new Crawler(500, 150, '#BADA55', 100, 150);
 ```
 </details>
 
@@ -250,7 +243,7 @@ Now that we know what we want to do, write a function `gameLoop`, put your pseud
 ```javascript
 function gameLoop() {
     // Clear the Cavas
-    ctx.clearRect(0, 0, game.width, game.height)
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
     //Display the X and Y coordinates of our hero
     movementDisplay.textContent = `X: ${hero.x} Y: ${hero.y}`
     // Check of the ogre is alive
@@ -268,20 +261,14 @@ function gameLoop() {
 
 The interval that we set our loop to will depend on how many frames we want per second. We want to strike a balance between optimisation _(every milisecond is unnecessarily taxing, especially as our game logic gets bigger)_ and how quickly a human can perceive changes _(a one second refresh rate is very noticable)_. We're going to put our interval every 60 miliseconds which is about 16 frames per second.
 
-In your `DOMContentLoaded` event listener, set `gameLoop()` to run every 60 miliseconds. 
+> Set `gameLoop()` to run every 60 miliseconds. 
 > Make sure to set it to a variable (I used `runGame`) so we can clear it later.
 
 <details><summary>Check your work</summary>
 <p>
 
 ```javascript
-document.addEventListener('DOMContentLoaded', function() {
-  hero = new Crawler(100, 200, 'hotpink', 40, 40);
-  ogre = new Crawler(500, 150, '#BADA55', 100, 150);
-  
-  var runGame = setInterval(gameLoop, 60);
-})
-
+let runGame = setInterval(gameLoop, 60);
 ```
 </p>
 </details>
@@ -355,15 +342,7 @@ Now that we have our movement handler function, we simply have to make the compu
 <summary>Check your work</summary>
 
 ```javascript
-document.addEventListener('DOMContentLoaded', function() {
-  
-  hero = new Crawler(100, 200, 'hotpink', 40, 40)
-  ogre = new Crawler(500, 150, '#BADA55', 100, 150)
-
-  document.addEventListener('keydown', movementHandler);
-
-  var runGame = setInterval(gameLoop, 60)
-})
+document.addEventListener('keydown', movementHandler);
 ```
 
 </details>
@@ -388,6 +367,43 @@ When talking collision, we want to test against the larger box. We have 4 points
 3. The top-most y value of the ogre —`ogre.y`
 4. The bottom-most y value of the ogre —`ogre.y+height`
 
+<details>
+<summary>Check your work</summary>
+
+```javascript
+function detectHit() {
+  // check each side for intersection one by one
+  let ogreLeft = hero.x + hero.width >= ogre.x
+  console.log('ogreRight', ogreRight)
+  let ogreRight = hero.x <= ogre.x + ogre.width
+  console.log('ogreLeft', ogreLeft)
+
+  /* 
+  checking both sides with an or will always be true!
+  (hero.x <= ogre.x + ogre.width || hero.x + hero.width >= ogre.x)
+  hits are only detected only when BOTH are ture!
+  (hero.x <= ogre.x + ogre.width && hero.x + hero.width >= ogre.x)
+  */
+
+  // check the top annd bottom 
+  let ogreTop = hero.y + hero.height >= ogre.y
+  console.log('ogreTop', ogreTop)
+  let ogreBottom = hero.y <= ogre.y + ogre.height
+  console.log('ogreBottom', ogreBottom)
+
+  // one big, confusing if:
+  if (
+    hero.x + hero.width >= ogre.x &&
+    hero.x <= ogre.x + ogre.width &&
+    hero.y <= ogre.y + ogre.height &&
+    hero.y + hero.height >= ogre.y
+    ) {
+      // do some game stuff!
+      console.log('hit!')
+    }
+}
+```
+</details>
 
 ## BONUSES
 
@@ -396,7 +412,39 @@ When talking collision, we want to test against the larger box. We have 4 points
 * **Make the ogre and hero spawn in random locations to start.** How do you make sure that they don't accidentally spawn on top of each other? That they don't spawn off the board or, more likely, half off the board?
 * **Make it pretty!** There are some art assets in the `img` folder, put them to use or get some free sprites and make your hero and ogre look like more than boxes.
 * **Make a reset button that restarts the game.** Replayability is the name of the game, keep 'em coming back for more!
+* **Move diagonally** Right now we are using a 'keydown' event listener to move the hero. Using a 'keyup' event listener, can you think of a way to store keypresses in state to be reference in the game loop?
+* **Refactor hit detection** Hardcoding hitdection to only work between two specific objects limits gameplay quite a bit. How can you refactor this to be more flexible? 
+* **Refactor the Crawler class to accept an object as parameters.** Constructors with a ton of parameters can get really confusing really fast, so organizing them into an object improves readability and cuts down on bugs.
+ <details>
+<summary>Check your work</summary>
 
+```javascript
+class Crawler {
+  constructor(args) {
+    this.x = args.x
+    this.y = args.y
+    this.color = args.color
+    this.width = args.width
+    this.height = args.height
+    this.alive = true
+  }
+  render() {
+    ctx.fillStyle = this.color
+    ctx.fillRect(this.x, this.y, this.width, this.height)
+  }
+}
+
+const randoArgs = {
+  x: 5,
+  y: 5,
+  color: 'purple',
+  width: 40,
+  height: 140
+}
+
+let rando = new Crawler(randoArgs)
+```
+</details>
 
 ## Additional Resources
 
