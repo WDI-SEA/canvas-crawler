@@ -1,8 +1,9 @@
 /* DOM SELECTORS -- EVENT LISTENERS */
 const canvas = document.querySelector('#canvas')
-document.addEventListener('keydown', movementHandler)
+const pressedKeys = { }
+document.addEventListener('keydown', e => pressedKeys[e.key] = true)
+document.addEventListener('keyup', e => pressedKeys[e.key] = false) // strech goals might be useful
 const movementDisplay = document.querySelector('#movement')
-// document.addEventListener('keyup', movementHandler) // strech goals might be useful
 
 /* GAME STATE/CANVAS RENDERING STUFF */
 // setup the renderer
@@ -92,16 +93,17 @@ class Crawler {
 const hero = new Crawler(10, 10, 20, 20, 'hotpink')
 const ogre = new Crawler(250, 250, 40, 50, 'green')
 
-function movementHandler(e) {
+function movementHandler() {
   // console.log(e)
-  const speed = 10
-  // movementDisplay.innerText = 'X:' + hero.x + ' ' + 'Y:' + hero.y 
+  const speed = 5
+  console.log(pressedKeys)
+//   // movementDisplay.innerText = 'X:' + hero.x + ' ' + 'Y:' + hero.y 
   if (ogre.alive) movementDisplay.innerText = `X:${hero.x} Y:${hero.y}` 
-  // conditional logic based on what key was pressed
-  if (e.key === 'a' || e.key === 'ArrowLeft') hero.x -= speed
-  if (e.key === 'd' || e.key === 'ArrowRight') hero.x += speed
-  if (e.key === 's' || e.key === 'ArrowDown') hero.y += speed
-  if (e.key === 'w' || e.key === 'ArrowUp') hero.y -= speed
+//   // conditional logic based on what key was pressed
+  if (pressedKeys.a || pressedKeys.ArrowLeft) hero.x -= speed
+  if (pressedKeys.d || pressedKeys.ArrowRight) hero.x += speed
+  if (pressedKeys.s || pressedKeys.ArrowDown) hero.y += speed
+  if (pressedKeys.w || pressedKeys.ArrowUp) hero.y -= speed
 }
 
 function detectHit() {
@@ -138,6 +140,8 @@ function gameLoop() {
   // clear the canvas and then render
   // clear the entire canvs from tp left to bottom right
   ctx.clearRect(0, 0, canvas.width, canvas.height)
+  // update the objects before we render
+  movementHandler()
   // render all gameplay elements (hero and ogre)
   hero.render()
   if (ogre.alive) {
