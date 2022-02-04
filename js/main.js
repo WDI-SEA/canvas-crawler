@@ -12,7 +12,7 @@ const ctx = canvas.getContext('2d')
 canvas.setAttribute("height", getComputedStyle(canvas)["height"])
 canvas.setAttribute("width", getComputedStyle(canvas)["width"])
 // setup the gameloop
-const gameLoopInterval = setInterval(gameLoop, 60) // game logic + rendering tied to speed loop runs  
+let gameLoopInterval = setInterval(gameLoop, 60) // game logic + rendering tied to speed loop runs  
 
 
 // console.log(ctx)
@@ -78,9 +78,11 @@ class Crawler {
     this.width = width
     this.height = height
     this.color = color
+    this.alive = true
   }
 
   render() {
+    // end the game
     ctx.fillStyle = this.color
     ctx.fillRect(this.x, this.y, this.width, this.height)
   }
@@ -94,12 +96,42 @@ function movementHandler(e) {
   // console.log(e)
   const speed = 10
   // movementDisplay.innerText = 'X:' + hero.x + ' ' + 'Y:' + hero.y 
-  movementDisplay.innerText = `X:${hero.x} Y:${hero.y}` 
+  if (ogre.alive) movementDisplay.innerText = `X:${hero.x} Y:${hero.y}` 
   // conditional logic based on what key was pressed
   if (e.key === 'a' || e.key === 'ArrowLeft') hero.x -= speed
   if (e.key === 'd' || e.key === 'ArrowRight') hero.x += speed
   if (e.key === 's' || e.key === 'ArrowDown') hero.y += speed
   if (e.key === 'w' || e.key === 'ArrowUp') hero.y -= speed
+}
+
+function detectHit() {
+  // four conditional checks one for every side of both boxes
+  // left side ogre right side hore
+  // hero right side ogre left side
+  // const ogreLeft = hero.x + hero.width >= ogre.x
+  // // console.log(ogreLeft)
+  // // ogre right hero left
+  // const ogreRight =  hero.x <= ogre.x + ogre.width
+  // // console.log(ogreRight && ogreLeft)
+  // // ogre top hero bottom
+  // const ogreTop = hero.y + hero.height >= ogre.y 
+  // // hero top ogre bottom
+  // const ogreBottom = hero.y <= ogre.y + ogre.height
+
+  // console.log(ogreLeft && ogreRight && ogreBottom && ogreTop)
+  if(
+    hero.x + hero.width >= ogre.x &&
+    hero.x <= ogre.x + ogre.width &&
+    hero.y + hero.height >= ogre.y &&
+    hero.y <= ogre.y + ogre.height
+  ) {
+    // hero has gotten the ogre
+    // ogre.color = 'red'
+    movementDisplay.innerText = "YOU KILLED SHREK!"
+    ogre.alive = false
+    clearInterval(gameLoopInterval)
+ 
+  }
 }
 
 function gameLoop() {
@@ -108,7 +140,10 @@ function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   // render all gameplay elements (hero and ogre)
   hero.render()
-  ogre.render()
+  if (ogre.alive) {
+    ogre.render()
+  }
   // gameplay logic -- win conditions ???
-  // collision detections
+  // collision detections ever game render
+  detectHit()
 }
