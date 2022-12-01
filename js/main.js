@@ -41,7 +41,7 @@ class Crawler {
         this.width = width
         this.height = height
         this.color = color
-
+        this.alive = true
     }
 
     render() {
@@ -53,7 +53,9 @@ class Crawler {
 // game varaibles area
 const gameLoopInterval = setInterval(gameLoop, 60)
 const hero = new Crawler(5, 5, 25, 25, 'hotpink')
-const ogre = new Crawler(400, 150, 50, 75, 'green')
+const ogre = new Crawler(400, 75, 50, 75, 'green')
+const wall = new Crawler(300, 0, 75, 250, 'blue')
+const pressedKeys = {}
 
 // const testCrawler = new Crawler(50, 50, 45, 45, 'white')
 // testCrawler.render()
@@ -68,41 +70,85 @@ const ogre = new Crawler(400, 150, 50, 75, 'green')
 // }
 
 // define a way to handle user input to move our hero around
-function handleMovement(e) {
-    console.log(e.key)
-    const speed = 5
-    switch (e.key) {
-        case('w'):
-            // move the hero up
-            // console.log('move the hero up')
-            hero.y -= speed
-            break
-        case('s'):
-            // console.log('move the hero down')
-            hero.y += speed
-            break
-        case('a'):
-            // console.log('move the hero to the left')
-            hero.x -= speed
-            break
-        case('d'):
-            // console.log('move the hero to the right')
-            hero.x += speed
-            break
-        default:
-            // console.log('that key doesn\'t move the hero')
+function handleMovement(speed) {
+    // console.log(e.key)
+    if (pressedKeys.w) {
+        hero.y -= speed
     }
+    if (pressedKeys.s) {
+        hero.y += speed
+    }
+    if (pressedKeys.a) {
+        hero.x -= speed
+    }
+    if (pressedKeys.d) {
+        hero.x += speed
+    }
+
+    // switch (e.key) {
+    //     case('w'):
+    //         // move the hero up
+    //         // console.log('move the hero up')
+    //         hero.y -= speed
+    //         break
+    //     case('s'):
+    //         // console.log('move the hero down')
+    //         hero.y += speed
+    //         break
+    //     case('a'):
+    //         // console.log('move the hero to the left')
+    //         hero.x -= speed
+    //         break
+    //     case('d'):
+    //         // console.log('move the hero to the right')
+    //         hero.x += speed
+    //         break
+    //     default:
+    //         // console.log('that key doesn\'t move the hero')
+    // }
     movementDisplay.innerText = `x: ${hero.x} y: ${hero.y}`
 }
-document.addEventListener('keydown', handleMovement)
+document.addEventListener('keydown', e => pressedKeys[e.key] = true)
+document.addEventListener('keyup', e => pressedKeys[e.key] = false)
 
 // define a gameloop
 function gameLoop() {
     // clear the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     // do buisiness logic of the game
+    // check for input
+    // console.log(pressedKeys)
+    // if there is a hit between the hero and the wall -- speed is negetive
+    if (detectHit(hero, wall)) {
+        handleMovement(-5)
+    } else {
+        handleMovement(5)
+    }
+    // if a hit is detected between our hero and the evil ogre, end the game
+    if (detectHit(hero, ogre)) {
+        // end the game
+        console.log('the game is over!')
+        // make ogre disapper
+        ogre.alive = false
+        // update the message that the player has won
+        statusDisplay.innerText = 'you have succedded in slaying the defenselss ogre, who is the monster now? The hero? The Ogre?'
+    }
     // render all of the game objects
+    wall.render()
     hero.render()
-    ogre.render()
+    if (ogre.alive) {
+        ogre.render()
+    }
 }
+
 // define a collision detection algorithm
+function detectHit(objectOne, objectTwo) {
+    // AABB -- axis aligned bounding box collision detection
+    // check for overlaps, side by side
+    const left = objectOne.x + objectOne.width >= objectTwo.x
+    const right = objectOne.x <= objectTwo.x + objectTwo.width
+    const top = objectOne.y + objectOne.height >= objectTwo.y
+    const bottom = objectOne.y <= objectTwo.y + objectTwo.height
+    // console.log(left, right, top, bottom)
+    return left && right && top && bottom
+}
