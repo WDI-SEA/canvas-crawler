@@ -91,13 +91,38 @@ function handleKeyPressEvent(e) {
 
 document.addEventListener("keydown", handleKeyPressEvent)
 
+function detectHit() {
+    // axis aligned bounding box collision detection
+    // AABB
+    const left = ogre.x <= hero.width + hero.x
+    const right = ogre.x + ogre.width >= hero.x
+    // console.log(left, right)
+    const top = ogre.y <= hero.y + hero.height
+    const bottom = ogre.y + ogre.height >= hero.y
+    if (left && top && bottom && right) {
+        return true
+    } else {
+        return false
+    }
+}
+
 function gameLoop() {
     // clear off the renderer
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     // buisiness logic of our game
     // check for collision
+    if (detectHit()) {
+        // end game here
+        console.log("end the game!")
+        // kill shrek
+        ogre.alive = false
+        statusDisplay.innerText = "the hero has bravely face their ogre and slayed it!"
+        clearInterval(gameLoopInterval)
+    }
     // check for end game conditions
     // do all of the rendering
+    if (ogre.alive) {
+        ogre.render()
+    }
     hero.render()
-    ogre.render()
 }
