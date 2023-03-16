@@ -57,12 +57,6 @@ class Crawler {
     }
 }
 
-function handleKeyPressEvent(e) {
-    console.log("a key was pressed")
-}
-
-document.addEventListener("keydown", handleKeyPressEvent)
-
 // GAME OBJECTS
 const hero = new Crawler(0, 0, 45, 45, "hotpink")
 const ogre = new Crawler(400, 75, 100, 150, "#bada55")
@@ -72,7 +66,34 @@ const gameLoopInterval = setInterval(gameLoop, 60)
 // const testCrawler = new Crawler(10, 45, 100, 50, "blue")
 // testCrawler.render()
 
+function handleKeyPressEvent(e) {
+    const speed = 10
+    switch(e.key) {
+        case "w":
+        case "ArrowUp":
+            hero.y -= speed
+            break
+        case "s":
+        case "ArrowDown":
+            hero.y += speed
+            break
+        case "a":
+        case "ArrowLeft":
+            hero.x -= speed
+            break
+        case "d":
+        case "ArrowRight":
+            hero.x += speed
+            break
+        }
+        movementDisplay.innerText = `x: ${hero.x} y: ${hero.y}`
+}
+
+document.addEventListener("keydown", handleKeyPressEvent)
+
 function gameLoop() {
+    // clear off the renderer
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
     // buisiness logic of our game
     // check for collision
     // check for end game conditions
