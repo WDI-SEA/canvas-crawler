@@ -53,6 +53,12 @@ const testCrawler = new Crawler(45, 45, 65, 23, "green");
 // testCrawler.render();
 const hero = new Crawler(0, 0, 30, 30, "hotpink");
 const ogre = new Crawler(287, 79, 50, 70, "#bada55");
+const ogres = [
+    new Crawler(287, 79, 50, 70, "#bada55"),
+    new Crawler(287 + Math.random() * 200, 79 +  Math.random() * 200, 50, 70, "#bada55"),
+    new Crawler(287 + Math.random() * 200, 79 +  Math.random() * 200, 50, 70, "#bada55"),
+    new Crawler(287 + Math.random() * 200, 79 +  Math.random() * 200, 50, 70, "#bada55")
+]
 
 /* ----- FUNCTIONS ---------- */
 function drawBox(x, y, width, height, color) {
@@ -128,19 +134,19 @@ function movementHandler() {
 }
 
 // collision detection algorithm
-function detectHit() {
+function detectHit(objectOne, objectTwo) {
     // AABB axis aligned bounding box algorithm
     // check for collisions on each side of each object
     // if each boundary is passed -- a collision is detected
 
-    // top of the ogre
-    const top = hero.y + hero.height >= ogre.y;
-    // bottom of the ogre
-    const bottom = hero.y <= ogre.y + ogre.height;
-    // Left of ogre
-    const left = hero.x + hero.width >= ogre.x;
-    // Right of ogre
-    const right = hero.x <= ogre.x + ogre.width;
+    // top of the objectTwo
+    const top = objectOne.y + objectOne.height >= objectTwo.y;
+    // bottom of the objectTwo
+    const bottom = objectOne.y <= objectTwo.y + objectTwo.height;
+    // Left of objectTwo
+    const left = objectOne.x + objectOne.width >= objectTwo.x;
+    // Right of objectTwo
+    const right = objectOne.x <= objectTwo.x + objectTwo.width;
     // console.log(`top: ${top}, bottom: ${bottom}, left: ${left}, right: ${right}`)
     if (top && bottom && left && right) {
         // console.log("hit detected!")
@@ -159,16 +165,25 @@ function gameloop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // render all game objects
     hero.render();
-    if (ogre.alive) {
-        ogre.render();
+    let allShreksDead = true
+    for (let i = 0; i < ogres.length; i++) {
+        if (ogres[i].alive) {
+            ogres[i].render();
+        }
+        if (detectHit(hero, ogres[i])) {
+            ogres[i].alive = false;
+        }
+        if (ogres[i].alive) {
+            allShreksDead = false;
+        }
     }
     // do game logic
-    if (detectHit()) {
+    if (allShreksDead) {
         // the game has ended
         // set ogre to be not alive
         ogre.alive = false;
         // display a message to the user
-        status.innerText = "You have killed skrek 😭";
+        status.innerText = "You have killed all the skreks 😭";
     }
 }
 
