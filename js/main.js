@@ -63,28 +63,67 @@ function drawBox(x, y, width, height, color) {
 // drawBox(50, 100, 35, 75);
 
 // handle keyboard input from the user
-function movementHandler(e) {
-    if (ogre.alive) {
-        // console.log(e);
-        const speed = 10; // how many pixels the hero moves per movement
-        // one varaible that can be many values and each value has a different chunk of code to run -- use a switch case!
-        switch(e.key.toLowerCase()) {
-            case "w":
-                hero.y -= speed;
-                break;
-            case "s":
-                hero.y += speed;
-                break;
-            case "a":
-                hero.x -= speed;
-                break;
-            case "d":
-                hero.x += speed;
-                break;
-            default:
-                // any other value will run the defualt
-                console.log(`${e.key} not recognized!`);
+const currentlyPressedKeys = {}
+function movementHandler() {
+    // if (ogre.alive) {
+    //     // console.log(e);
+    //     const speed = 10; // how many pixels the hero moves per movement
+    //     // one varaible that can be many values and each value has a different chunk of code to run -- use a switch case!
+    //     switch(e.key.toLowerCase()) {
+    //         case "w":
+    //             hero.y -= speed;
+    //             break;
+    //         case "s":
+    //             hero.y += speed;
+    //             break;
+    //         case "a":
+    //             hero.x -= speed;
+    //             break;
+    //         case "d":
+    //             hero.x += speed;
+    //             break;
+    //         default:
+    //             // any other value will run the defualt
+    //             console.log(`${e.key} not recognized!`);
+    //     }
+    // }
+    // console.log(currentlyPressedKeys);
+    const speed = 10;
+    if (currentlyPressedKeys["w"]) {
+        let isDiagnal = false;
+        if (currentlyPressedKeys["a"] || currentlyPressedKeys["d"]) {
+            isDiagnal = true;
         }
+        hero.y -= isDiagnal ? speed * .75 : speed;
+    } 
+    if (currentlyPressedKeys["s"]) {
+        let isDiagnal = false;
+        if (currentlyPressedKeys["a"] || currentlyPressedKeys["d"]) {
+            isDiagnal = true;
+        }
+        hero.y += isDiagnal ? speed * .75 : speed;
+    } 
+    if (currentlyPressedKeys["a"]) {
+        let isDiagnal = false;
+        if (currentlyPressedKeys["w"] || currentlyPressedKeys["s"]) {
+            isDiagnal = true;
+        }
+        hero.x -= isDiagnal ? speed * .75 : speed;
+
+    } 
+    if (currentlyPressedKeys["d"]) {
+        let isDiagnal = false;
+        if (currentlyPressedKeys["w"] || currentlyPressedKeys["s"]) {
+            isDiagnal = true;
+        }
+        hero.x += isDiagnal ? speed * .75 : speed;
+    } 
+    
+    // multiple keys example
+    if (currentlyPressedKeys["f"] && currentlyPressedKeys["g"]) {
+        console.log("you have unlocked the secret code!");
+        ogre.x--;
+        ogre.y--;
     }
 }
 
@@ -114,6 +153,8 @@ function detectHit() {
 // create a gameloop -- run the business logic of the game and be called by a setInterval
 const gameInterval = setInterval(gameloop, 80);
 function gameloop() {
+    // update the inputs
+    movementHandler(); // checking the input object
     // clear the canvas to rerender
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // render all game objects
@@ -137,5 +178,6 @@ canvas.addEventListener('click', e => {
     drawBox(e.offsetX, e.offsetY, 30, 30, "#C724B1")
 });
 
-document.addEventListener('keydown', movementHandler);
+document.addEventListener('keydown', e => currentlyPressedKeys[e.key] = true);
+document.addEventListener('keyup', e => currentlyPressedKeys[e.key] = false);
  
